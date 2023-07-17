@@ -3,9 +3,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled/view/todo/todo_cubit.dart';
 
 import '../models/todo_model.dart';
 import '../services/todo_service.dart';
+import 'package:bloc/bloc.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -15,41 +18,64 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<TodoModel> todo = [];
-  bool isLoading = true;
-
-  getTodo() async {
-    todo = await TodoService().getTodoData();
-    isLoading = false;
-    setState(() {});
-  }
-  
 
   @override
-  void initState() {
-    super.initState();
-    getTodo();
-  }
 
    Widget build(BuildContext context) {
-    return isLoading
-    ? Center(
-      child: CircularProgressIndicator(),
-      
-    )
+    return BlocProvider(
+      create: (context) => TodoCubit(),
+      child: BlocConsumer<TodoCubit,TodoState>(
+      builder: (context, state) {
 
-    : ListView.builder(
-      itemCount: todo.length,
-    itemBuilder: (BuildContext context, int index) {
-      return ListTile(
-        title: Text(todo[index].title ?? "--"),
-        subtitle: Text(todo[index].completed.toString()),
+        if(state is TodoLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );}
+          else if (state is TodoSuccess) {
+            return ListView.builder(
+              itemCount: context.watch<TodoCubit>().todo.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(context.watch<TodoCubit>().todo[index].title ?? "--"),
+                    subtitle: Text(context.watch<TodoCubit>().todo[index].completed.toString()),
 
-      
-      trailing: Icon(Icons.check_box_outline_blank_outlined),
+                  
+                  trailing: Icon(Icons.check_box_outline_blank_outlined),
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: Text("Error in this screen")
+            );
+          }
+      },
+      listener: (context, state) {
+        if (state is TodoError) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Hello we have an error"),
+          ));
+        }
+      }
+    ),
+    
       );
-    },
-    );
+   }
+}
+    // return isLoading
+    // ? Center(
+    //   
+      
+    // )
+
+    // : ListView.builder(
+    //   itemCount: todo.length,
+    // itemBuilder: (BuildContext context, int index) {
+    //   return ListTile(
+    //     
+    //   );
+    // },
+    // );
 
     // Scaffold(
     //   appBar: AppBar(
@@ -62,10 +88,3 @@ class _HomePageState extends State<HomePage> {
     //       onPressed: (){Navigator.of(context).pop();},
     //       icon: Icon(Icons.exit_to_app),
     //       )
-    //   ));
-    
-    
-      
-
-}
-}
