@@ -1,19 +1,16 @@
-// ignore_for_file: unused_element, dead_code, prefer_const_literals_to_create_immutables, prefer_const_constructors, must_be_immutable
+// ignore_for_file: unused_element, dead_code, prefer_const_literals_to_create_immutables, prefer_const_constructors, must_be_immutable, unused_import, unnecessary_import
 
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:untitled/home.dart';
-import 'package:untitled/profile.dart';
-import 'package:untitled/setting.dart';
-import 'package:untitled/utils.dart';
-import 'package:untitled/widget/myButton.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
+import 'home.dart';
+import 'profile.dart';
+import 'setting.dart';
 
 class MainScreen extends StatefulWidget {
   final String email;
-  MainScreen({super.key,required this.email});
+  
+  MainScreen({super.key, required this.email});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -59,10 +56,7 @@ class _MainScreenState extends State<MainScreen> {
           page.elementAt(_currentIndex),                
           );
         }
-
-        saveEmail(String email) async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("email", email); 
-    }
+        
+        
         
 }

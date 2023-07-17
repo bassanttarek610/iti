@@ -1,11 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_import, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, duplicate_ignore
 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/mainScreen.dart';
-import 'package:untitled/widget/myButton.dart';
+import 'mainScreen.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -122,6 +122,7 @@ class _LoginPageState extends State<LoginPage>  {
                     
                     MaterialButton(onPressed: () {
                       if( _formKey.currentState!.validate()){
+                        saveEmail(emailController.text);
                     Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MainScreen(
@@ -152,6 +153,13 @@ class _LoginPageState extends State<LoginPage>  {
         ),
     );
     }
+    saveEmail(String email) async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("email", email);
+    }
+
+
+    
 
     
 }

@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors, unused_element, dead_code, override_on_non_overriding_member
+// ignore_for_file: prefer_const_constructors, unused_element, dead_code, override_on_non_overriding_member, unused_import
 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:untitled/mainScreen.dart';
-import 'package:untitled/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/view/utils.dart';
 
 class ProfilePage extends StatefulWidget{
   ProfilePage({super.key});
@@ -20,9 +19,9 @@ class _ProfilePageState extends State<ProfilePage>
 {
   String userEmail = ""; 
   @override
-  void initstate() {
+  void initState() {
     super.initState();
-    getEmail();
+    email();
   }
   
   Widget build(BuildContext context) {
@@ -35,12 +34,12 @@ class _ProfilePageState extends State<ProfilePage>
         automaticallyImplyLeading: false,
       ),
 
-      // body: Center(
-      //   child: Text(userEmail)
-
-      body: Center(
+      
+      body: 
+      
+      Center(
         child: Text(userEmail,
-        style: TextStyle(fontSize: 30),
+        style: TextStyle(fontSize: 15),
         )
         ),
       
@@ -50,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  getEmail() async {
+  email() async {
           userEmail = await getEmail();
           setState(() {});
         }
