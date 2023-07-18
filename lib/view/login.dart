@@ -1,10 +1,12 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_import, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, duplicate_ignore
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_import, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, duplicate_ignore, unused_local_variable, avoid_print
 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'mainScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 
 class LoginPage extends StatefulWidget {
@@ -21,6 +23,7 @@ class _LoginPageState extends State<LoginPage>  {
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     final TextEditingController emailController = TextEditingController();
+      final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar( title: Text('Login'),
@@ -85,6 +88,7 @@ class _LoginPageState extends State<LoginPage>  {
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(8.5, 0, 8.5,0),
                     child: TextFormField(
+                      controller: passwordController,
                       decoration: 
                       InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -122,7 +126,7 @@ class _LoginPageState extends State<LoginPage>  {
                     
                     MaterialButton(onPressed: () {
                       if( _formKey.currentState!.validate()){
-                        saveEmail(emailController.text);
+                        signinUsingFirebase(emailController.text, passwordController.text);
                     Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MainScreen(
@@ -156,6 +160,14 @@ class _LoginPageState extends State<LoginPage>  {
     saveEmail(String email) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("email", email);
+    }
+
+    signinUsingFirebase(String email, String password) async {
+      UserCredential userCredential = 
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email ,password: password);
+      final user = userCredential.user;
+      print(user?.uid);
+      saveEmail(user!.email!);
     }
 
 
