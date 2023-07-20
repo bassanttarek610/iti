@@ -3,9 +3,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/view/task_list.dart';
 import 'home.dart';
 import 'profile.dart';
 import 'setting.dart';
+import 'task_list.dart';
 
 class MainScreen extends StatefulWidget {
   final String email;
@@ -25,7 +27,8 @@ class _MainScreenState extends State<MainScreen> {
   List <Widget> page = [
     HomePage(),
     ProfilePage(),
-    SettingPage()
+    SettingPage(),
+    TaskList()
   ];
 
  
@@ -48,7 +51,8 @@ class _MainScreenState extends State<MainScreen> {
             items:  [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
               BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-              BottomNavigationBarItem(icon: Icon(Icons.settings), label:"Settings")
+              BottomNavigationBarItem(icon: Icon(Icons.settings), label:"Settings"),
+              BottomNavigationBarItem(icon: Icon(Icons.task), label:"Tasks")
             ]),
 
 

@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_import, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, duplicate_ignore, unused_local_variable, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_import, no_leading_underscores_for_local_identifiers, sized_box_for_whitespace, duplicate_ignore, unused_local_variable, avoid_print, use_build_context_synchronously
 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/view/task_list.dart';
 import 'mainScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -124,15 +125,21 @@ class _LoginPageState extends State<LoginPage>  {
                       height: 25,
                     ),
                     
-                    MaterialButton(onPressed: () {
+                    MaterialButton(onPressed: () async {
                       if( _formKey.currentState!.validate()){
-                        signinUsingFirebase(emailController.text, passwordController.text);
-                    Navigator.push(
+                        bool loginResult = await signinUsingFirebase(emailController.text, passwordController.text);
+                    if( loginResult == true ){
+                      Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MainScreen(
-                      email: emailController.text,
-                    )),);
-                    
+                    MaterialPageRoute(builder: (context) => TaskList()
+                    ));
+                    } 
+                    else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login failed")));
+                    }
+                    }
+                    else{
+                      emailController.clear();
                     }
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40), 
@@ -162,12 +169,19 @@ class _LoginPageState extends State<LoginPage>  {
       prefs.setString("email", email);
     }
 
-    signinUsingFirebase(String email, String password) async {
-      UserCredential userCredential = 
+    Future<bool> signinUsingFirebase(String email, String password) async {
+      bool result = false;
+      try {
+        UserCredential userCredential = 
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email ,password: password);
       final user = userCredential.user;
       print(user?.uid);
       saveEmail(user!.email!);
+      result = true;
+      return result;
+      } catch (e) {
+        return result;
+      }
     }
 
 
